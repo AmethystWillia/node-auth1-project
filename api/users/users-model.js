@@ -27,3 +27,9 @@ function add(user) {
 }
 
 // Don't forget to add these to the `exports` object so they can be required in other modules
+module.exports = {
+  find,
+  findBy,
+  findById,
+  add,
+};
