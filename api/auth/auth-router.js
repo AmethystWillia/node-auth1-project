@@ -55,7 +55,15 @@ router.post('/register', checkUsernameFree, checkPasswordLength, (req, res, next
     "message": "Invalid credentials"
   }
  */
+router.post('/login', checkUsernameExists, (req, res) => {
+  const { password } = req.body;
 
+  if (bcrypt.compareSync(password, req.user.password) === true) {
+    res.status(200).json({ message: `Welcome ${req.user.username}` });
+  } else {
+    res.status(401).json({ message: 'Invalid credentials' });
+  }
+});
 
 /**
   3 [GET] /api/auth/logout
