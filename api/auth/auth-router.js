@@ -6,7 +6,6 @@ const router = express.Router();
 const bcrypt = require('bcryptjs');
 const Users = require('../users/users-model');
 const { checkUsernameFree, checkUsernameExists, checkPasswordLength } = require('./auth-middleware');
-const e = require('express');
 
 /**
   1 [POST] /api/auth/register { "username": "sue", "password": "1234" }
