@@ -6,6 +6,7 @@ const router = express.Router();
 const bcrypt = require('bcryptjs');
 const Users = require('../users/users-model');
 const { checkUsernameFree, checkUsernameExists, checkPasswordLength } = require('./auth-middleware');
+const e = require('express');
 
 /**
   1 [POST] /api/auth/register { "username": "sue", "password": "1234" }
@@ -81,7 +82,25 @@ router.post('/login', checkUsernameExists, (req, res) => {
     "message": "no session"
   }
  */
-
+router.get('/logout', (req, res) => {
+  if (req.session) {
+    req.session.destroy(err => {
+      if (err != null) {
+        res.status(400).json({ messgae: 'Error while logging out' });
+      } else {
+        res.status(200).json({ message: 'logged out' });
+      }
+    })
+  } else {
+    req.session.destroy(err => {
+      if (err != null) {
+        res.status(400).json({ messgae: 'Error while logging out' });
+      } else {
+        res.status(200).json({ message: 'no session' });
+      }
+    })
+  }
+});
  
 // Don't forget to add the router to the `exports` object so it can be required in other modules
 module.exports = router;
