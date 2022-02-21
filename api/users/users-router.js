@@ -29,7 +29,13 @@ const Users = require('./users-model');
     "message": "You shall not pass!"
   }
  */
-
+router.get('/', (req, res, next) => {
+  Users.find()
+    .then(all => {
+      res.status(200).json(all);
+    })
+    .catch(next);
+});
 
 // Don't forget to add the router to the `exports` object so it can be required in other modules
 module.exports = router;
