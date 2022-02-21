@@ -1,7 +1,10 @@
 const express = require("express");
 const helmet = require("helmet");
 const cors = require("cors");
+
 const session = require('express-session');
+const { Store } = require("express-session");
+const knex = require('../data/db-config');
 
 const usersRouter = require('./users/users-router');
 const authRouter = require('./auth/auth-router');
@@ -19,19 +22,6 @@ const authRouter = require('./auth/auth-router');
   or you can use a session store like `connect-session-knex`.
  */
 
-const sessionConfig = {
-  name: 'chocolatechip',
-  secret: 'chocolatechip',
-  cookie: {
-    maxAge: 1000 * 60,
-    secure: false,
-    httpOnly: true,
-  },
-  resave: false,
-  saveUnitialized: false,
-};
-server.use(session(sessionConfig));
-
 const server = express();
 
 server.use(helmet());
@@ -40,6 +30,26 @@ server.use(cors());
 
 server.use('/api/users', usersRouter);
 server.use('/api/auth', authRouter);
+
+const sessionConfig = {
+  name: 'chocolatechip',
+  secret: 'shhh',
+  cookie: {
+    maxAge: 1000 * 60,
+    secure: false,
+    httpOnly: true,
+  },
+  resave: false,
+  saveUninitialized: false,
+  store: new Store({
+    knex,
+    createTable: true,
+    clearInterval: 1000 * 60,
+    tableName: 'sessions',
+    sidfieldname: 'sid',
+  }),
+};
+server.use(session(sessionConfig));
 
 server.get("/", (req, res) => {
   res.json({ api: "up" });

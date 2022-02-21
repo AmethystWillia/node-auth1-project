@@ -60,6 +60,7 @@ router.post('/login', checkUsernameExists, (req, res) => {
 
   if (bcrypt.compareSync(password, req.user.password) === true) {
     res.status(200).json({ message: `Welcome ${req.user.username}` });
+    req.session.user = req.user;
   } else {
     res.status(401).json({ message: 'Invalid credentials' });
   }
